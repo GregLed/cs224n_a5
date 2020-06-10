@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/home/greg/anaconda3/envs/nlp/bin/python",
+    "autoDocstring.docstringFormat": "numpy"
+}

@@ -348,3 +348,41 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+    # args = {}
+    # args["--train-src"] = "./en_es_data/train_tiny.es"
+    # args["--train-tgt"] = "./en_es_data/train_tiny.en"
+    # args["--dev-src"] = "./en_es_data/dev_tiny.es"
+    # args["--dev-tgt"] = "./en_es_data/dev_tiny.en"
+    # args["--vocab"] = "vocab_tiny_q1.json"
+    # args["--seed"]=0
+    # args["--batch-size"]=2
+    # args["--word-embed-size"]=256
+    # args["--hidden-size"]=256
+    # args["--clip-grad"]=5.0
+    # args["--log-every"]=10
+    # args["--max-epoch"]=101
+    # args["--patience"]=5
+    # args["--max-num-trial"]=5
+    # args["--lr-decay"]=0.5
+    # args["--beam-size"]=5
+    # args["--sample-size"]=5
+    # args["--lr"]=0.001
+    # args["--save-to"]='model.bin' 
+    # args["--uniform-init"]=0.1
+    # args["--valid-niter"]=2000
+    # args["--dropout"]=0.3
+    # args["--max-decoding-time-step"]=70
+    # args['--cuda'] = False
+    # args['MODEL_PATH'] = 'model.bin'
+    # args['TEST_SOURCE_FILE'] = './en_es_data/test.es'
+    # args['TEST_TARGET_FILE'] = './en_es_data/test.en'  
+    # args['OUTPUT_FILE'] = 'outputs/test_outputs.txt'
+    # args['--no-char-decoder'] = True
+
+    # # seed the random number generators
+    # seed = int(args['--seed'])
+    # torch.manual_seed(seed)
+    # np.random.seed(seed * 13 // 7)
+
+    # train(args)

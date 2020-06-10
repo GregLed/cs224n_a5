@@ -6,6 +6,8 @@ CS224N 2019-20: Homework 5
 sanity_check.py: sanity checks for assignment 5
 Usage:
     sanity_check.py 1e
+    sanity_check.py 1f
+    sanity_check.py 1g
     sanity_check.py 1h
     sanity_check.py 2a
     sanity_check.py 2b
@@ -27,7 +29,8 @@ from vocab import Vocab, VocabEntry
 
 from char_decoder import CharDecoder
 from nmt_model import NMT
-
+from highway import Highway
+from cnn import CNN
 
 import torch
 import torch.nn as nn
@@ -45,8 +48,8 @@ class DummyVocab():
     def __init__(self):
         self.char2id = json.load(open('./sanity_check_en_es_data/char_vocab_sanity_check.json', 'r'))
         self.id2char = {id: char for char, id in self.char2id.items()}
-        self.char_pad = self.char2id['∏']
-        self.char_unk = self.char2id['Û']
+        self.char_pad = self.char2id['<pad>']
+        self.char_unk = self.char2id['<unk>']
         self.start_of_word = self.char2id["{"]
         self.end_of_word = self.char2id["}"]
 
@@ -68,6 +71,51 @@ def question_1e_sanity_check():
     assert list(output.size()) == output_expected_size, "output shape is incorrect: it should be:\n {} but is:\n{}".format(output_expected_size, list(output.size()))
 
     print("Sanity Check Passed for Question 1e: To Input Tensor Char!")
+    print("-"*80)
+
+def question_1f_sanity_check():
+    """ Sanity check for Highway Connection
+    """
+    print ("-"*80)
+    print("Running Sanity Check for Question 1f: Highway Connection in/out shapes")
+    print ("-"*80)
+
+    batch_size = 20
+    word_emb = 5
+    hw = Highway(5)
+
+    print("Running test")
+
+    t_in = torch.arange(batch_size*word_emb).view(batch_size,word_emb).float()
+    output = hw(t_in)
+    output_expected_size = [batch_size, word_emb]
+    assert list(output.size()) == output_expected_size, "output shape is incorrect: it should be:\n {} but is:\n{}".format(output_expected_size, list(output.size()))
+
+    print("Sanity Check Passed for Question 1f: Highway Connection in/out shapes!")
+    print("-"*80)
+
+def question_1g_sanity_check():
+    """ Sanity check for cnn.py
+        basic shape check
+    """
+    print ("-"*80)
+    print("Running Sanity Check for Question 1g: CNN in/out shapes")
+    print ("-"*80)
+
+    batch_size = 20
+    ch_emb_sz = 5
+    filters = 6
+    max_w_len = 10
+    c = CNN(ch_emb_sz=ch_emb_sz, w_emb_sz=filters, max_w_len=10)
+
+    print("Running test")
+
+    t_in = torch.arange(batch_size*ch_emb_sz*max_w_len).view(batch_size,ch_emb_sz,max_w_len).float()
+    output = c(t_in)
+    output_expected_size = [batch_size, filters]
+    assert list(output.size()) == output_expected_size, "output shape is incorrect: it should be:\n {} but is:\n{}".format(output_expected_size, list(output.size()))
+
+    print("Sanity Check Passed for Question 1g: CNN in/out shapes!")
     print("-"*80)
 
 def question_1h_sanity_check(model):
@@ -169,6 +217,10 @@ def main():
 
     if args['1e']:
         question_1e_sanity_check()
+    elif args['1f']:
+        question_1f_sanity_check()
+    elif args['1g']:
+        question_1g_sanity_check()
     elif args['1h']:
         question_1h_sanity_check(model)
     elif args['2a']:

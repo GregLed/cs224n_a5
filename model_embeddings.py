@@ -38,9 +38,15 @@ class ModelEmbeddings(nn.Module):
         """
         super(ModelEmbeddings, self).__init__()
 
-        ### YOUR CODE HERE for part 1h
+        self.word_embed_size = word_embed_size
+        self.char_embed_size = 50
+        self.max_word_len = 21
+        self.dropout_p = 0.3
 
-        ### END YOUR CODE
+        self.ch_emb = nn.Embedding(len(vocab.char2id), self.char_embed_size, padding_idx=vocab.char_pad)
+        self.cnn = CNN(self.char_embed_size, self.word_embed_size, self.max_word_len)
+        self.hw = Highway(self.word_embed_size)
+        self.dropout = nn.Dropout(self.dropout_p)
 
     def forward(self, input):
         """
@@ -51,7 +57,13 @@ class ModelEmbeddings(nn.Module):
         @param output: Tensor of shape (sentence_length, batch_size, word_embed_size), containing the
             CNN-based embeddings for each word of the sentences in the batch
         """
-        ### YOUR CODE HERE for part 1h
 
-        ### END YOUR CODE
+        X_emb = self.ch_emb(input) # Tensor: (max_sentence_length, batch_size, max_word_length, char_embed_size)
+        X_emb_reshaped = X_emb.reshape(X_emb.size(0) * X_emb.size(1), X_emb.size(2), X_emb.size(3)) # Tensor: (max_sentence_length*batch_size, max_word_length, char_embed_size)
+        X_emb_reshaped = X_emb_reshaped.permute(0,2,1) # Tensor: (max_sentence_length*batch_size, char_embed_size, max_word_length)
+        X_convout = self.cnn(X_emb_reshaped)
+        X_hw = self.hw(X_convout)
+        output = self.dropout(X_hw)
+        output = output.reshape(input.size(0), input.size(1), X_convout.size(1))
 
+        return output
